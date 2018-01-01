@@ -67,6 +67,13 @@ class Pokemon
      */
     private $cp;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
+     */
+    private $level;
+
     public function __construct()
     {
         $this->despawnTime = new \DateTime('now');
@@ -203,6 +210,25 @@ class Pokemon
     public function setCp(int $cp): Pokemon
     {
         $this->cp = $cp;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLevel(): ?int
+    {
+        return $this->level;
+    }
+
+    /**
+     * @param int $level
+     * @return Pokemon
+     */
+    public function setLevel(int $level): Pokemon
+    {
+        $this->level = $level;
+
         return $this;
     }
 }

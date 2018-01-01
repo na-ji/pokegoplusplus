@@ -34,3 +34,71 @@
         No pokemons yet
     {% endif %}
 {% endblock body %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            let magicBoxElement = $('#pokemon_magicBox');
+            let latElement = $('#pokemon_lat');
+            let lngElement = $('#pokemon_lng');
+            let pokemonElement = $('#pokemon_pokedexNumber');
+            let ivElement = $('#pokemon_iv');
+            let cpElement = $('#pokemon_cp');
+            let levelElement = $('#pokemon_level');
+
+            magicBoxElement.on('change', function () {
+                const text = magicBoxElement.val();
+                const pokedex100Regex = /:  (.*?) :(\d+?):  IV(\d+?) CP(\d+?) L(\d+?) [^"]+\nClick to get coord https:\/\/pokedex100/g;
+                const livePokemapDiscordRegex = /: (.*) [♂♀]+  IV(\d+?)% LVL(\d+?) PC(\d+?) Despawn (.*?) [^"]+https:\/\/www\.google\.com\/maps\?q=(.*)%2C(.*)/g;
+                const livePokemapRocketRegex = /#(\d+) [\w ()]*- [^"]+\nDisparaît à (.*?) [APM]+ \([\w]+\)\nPosition: (.*), (.*)\nIV: (.*?)% \([\d/]+\)\nPC : (\d+) \| Niveau : (\d+)/g;
+                let match;
+                let lat;
+                let lng;
+                let pokemon;
+                let IV;
+                let CP;
+                let level;
+
+                if ((match = pokedex100Regex.exec(text)) !== null && match.length === 6) {
+                    pokemon = match[2];
+                    IV = match[3];
+                    CP = match[4];
+                    level = match[5];
+                } else if ((match = livePokemapDiscordRegex.exec(text)) !== null && match.length === 8) {
+                    IV = match[2];
+                    level = match[3];
+                    CP = match[4];
+                    lat = match[6];
+                    lng = match[7];
+                } else if ((match = livePokemapRocketRegex.exec(text)) !== null && match.length === 8) {
+                    console.log(match);
+                    pokemon = match[1];
+                    lat = match[3];
+                    lng = match[4];
+                    IV = match[5];
+                    CP = match[6];
+                    level = match[7];
+                }
+
+                if (lat) {
+                    latElement.val(lat);
+                }
+                if (lng) {
+                    lngElement.val(lng);
+                }
+                if (pokemon) {
+                    pokemonElement.val(pokemon);
+                }
+                if (IV) {
+                    ivElement.val(IV);
+                }
+                if (CP) {
+                    cpElement.val(CP);
+                }
+                if (level) {
+                    levelElement.val(level);
+                }
+            });
+        });
+    </script>
+{% endblock javascripts %}
