@@ -51,6 +51,8 @@
                 const pokedex100Regex = /:  (.*?) :(\d+?):  IV(\d+?) CP(\d+?) L(\d+?) [^"]+\nClick to get coord https:\/\/pokedex100/g;
                 const livePokemapDiscordRegex = /: (.*) [♂♀]+  IV(\d+?)% LVL(\d+?) PC(\d+?) Despawn (.*?) [^"]+https:\/\/www\.google\.com\/maps\?q=(.*)%2C(.*)/g;
                 const livePokemapRocketRegex = /#(\d+) [\w ()]*- [^"]+\nDisparaît à (.*?) [APM]+ \([\w]+\)\nPosition: (.*), (.*)\nIV: (.*?)% \([\d/]+\)\nPC : (\d+) \| Niveau : (\d+)/g;
+                const coordsRegex = /([-\d.]+)[, ]?([-\d.]*)/g;
+                const coordsURLRegex = /([\d.]*)%2C([\d.]*)/g;
                 let match;
                 let lat;
                 let lng;
@@ -71,13 +73,18 @@
                     lat = match[6];
                     lng = match[7];
                 } else if ((match = livePokemapRocketRegex.exec(text)) !== null && match.length === 8) {
-                    console.log(match);
                     pokemon = match[1];
                     lat = match[3];
                     lng = match[4];
                     IV = match[5];
                     CP = match[6];
                     level = match[7];
+                } else if ((match = coordsURLRegex.exec(text)) !== null && match.length === 3) {
+                    lat = match[1];
+                    lng = match[2];
+                } else if ((match = coordsRegex.exec(text)) !== null && match.length === 3) {
+                    lat = match[1];
+                    lng = match[2];
                 }
 
                 if (lat) {
