@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="row">
+        <div class="col">
+            <h3>Add a feed</h3>
+            {{ form(form) }}
+            <h3>My feeds</h3>
+            {% if feeds|length > 0 %}
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Link</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for feed in feeds %}
+                            <tr>
+                                <td>{{ feed.name }}</td>
+                                <td>{{ feed.name }}</td>
+                                <td>
+                                    <button class="btn">See</button>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                No feeds yet
+            {% endif %}
+        </div>
+    </div>
+{% endblock body %}
