@@ -8,10 +8,12 @@ use App\Form\FeedType;
 use App\Form\PokemonType;
 use App\Repository\FeedRepository;
 use App\Repository\PokemonRepository;
+use App\Service\Pokedex;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class FeedController extends Controller
 {
@@ -50,7 +52,7 @@ class FeedController extends Controller
     }
 
     /**
-     * @Route("/{slug}", name="feed_show")
+     * @Route("/feed/{slug}/show", name="feed_show")
      *
      * @param Feed $feed
      * @param EntityManagerInterface $entityManager
@@ -58,7 +60,7 @@ class FeedController extends Controller
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function show(Feed $feed, EntityManagerInterface $entityManager, PokemonRepository $pokemonRepository, Request $request)
+    public function show(Feed $feed, EntityManagerInterface $entityManager, PokemonRepository $pokemonRepository, Request $request, Pokedex $pokedex)
     {
         $pokemons = $pokemonRepository->findBy(['feed' => $feed->getId()], ['despawnTime' => 'DESC']);
 
@@ -85,5 +87,27 @@ class FeedController extends Controller
                 'pokemons' => $pokemons,
             ]
         );
+    }
+
+    /**
+     * @Route("/feed/{slug}/live", name="feed_live")
+     *
+     * @param Feed $feed
+     * @param \Twig_Environment $twig
+     * @return Response
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
+     */
+    public function live(Feed $feed, \Twig_Environment $twig)
+    {
+        $content = $twig->render('feed/live.txt.twig', [
+            'feed' => $feed
+        ]);
+
+        $response = new Response($content);
+        $response->headers->set('Content-Type', 'text/plain');
+
+        return $response;
     }
 }

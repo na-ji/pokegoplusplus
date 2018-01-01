@@ -21,7 +21,7 @@
             <tbody>
             {% for pokemon in pokemons %}
                 <tr>
-                    <td></td>
+                    <td>#{{ pokemon.pokedexNumber }} {{ pokemon.pokedexNumber|pokedexName }}</td>
                     <td>{{ pokemon.lat }}, {{ pokemon.lng }}</td>
                     <td>{{ pokemon.iv }}</td>
                     <td>{{ pokemon.cp }}</td>

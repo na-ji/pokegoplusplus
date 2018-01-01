@@ -17,7 +17,14 @@
                 {% for feed in feeds %}
                     <tr>
                         <td>{{ feed.name }}</td>
-                        <td>{{ feed.name }}</td>
+                        <td>
+                            <div class="input-group">
+                                <input type="text" class="form-control" value="{{ url('feed_live', {slug: feed.slug}) }}" />
+                                <div class="input-group-append">
+                                    <a href="#!" class="btn btn-primary copy-link">Copy link</a>
+                                </div>
+                            </div>
+                        </td>
                         <td>
                             <a href="{{ path('feed_show', {slug: feed.slug}) }}" class="btn btn-primary">See</a>
                         </td>
@@ -29,3 +36,19 @@
         No feeds yet
     {% endif %}
 {% endblock body %}
+
+{% block javascripts %}
+    <script>
+        $(function () {
+            $('.copy-link').on('click', function (event) {
+                let targetButton = $(event.target);
+                let inputElement = targetButton.parents('.input-group').find('input');
+                inputElement.trigger('focus');
+                inputElement.trigger('select');
+                document.execCommand('copy');
+                targetButton.removeClass('btn-primary').addClass('btn-success');
+                targetButton.text('Copied!');
+            });
+        });
+    </script>
+{% endblock javascripts %}

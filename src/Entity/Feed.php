@@ -102,6 +102,21 @@ class Feed
     }
 
     /**
+     * @return array
+     */
+    public function getLivePokemons(): array
+    {
+        $pokemons = $this->pokemons->toArray();
+        $now = new \DateTime('now');
+
+        $pokemons = array_filter($pokemons, function (Pokemon $pokemon) use ($now) {
+            return $pokemon->getDespawnTime() > $now;
+        });
+
+        return $pokemons;
+    }
+
+    /**
      * @param ArrayCollection $pokemons
      * @return Feed
      */
