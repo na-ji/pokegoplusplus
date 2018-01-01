@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Feed;
+use App\Entity\Pokemon;
 use App\Form\FeedType;
+use App\Form\PokemonType;
 use App\Repository\FeedRepository;
+use App\Repository\PokemonRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -42,6 +45,44 @@ class FeedController extends Controller
             [
                 'form' => $form->createView(),
                 'feeds' => $feeds,
+            ]
+        );
+    }
+
+    /**
+     * @Route("/{slug}", name="feed_show")
+     *
+     * @param Feed $feed
+     * @param EntityManagerInterface $entityManager
+     * @param PokemonRepository $pokemonRepository
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function show(Feed $feed, EntityManagerInterface $entityManager, PokemonRepository $pokemonRepository, Request $request)
+    {
+        $pokemons = $pokemonRepository->findBy(['feed' => $feed->getId()], ['despawnTime' => 'DESC']);
+
+        $form = $this->createForm(PokemonType::class, new Pokemon());
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            /** @var Pokemon $pokemon */
+            $pokemon = $form->getData();
+            $pokemon->setFeed($feed);
+
+            $entityManager->persist($pokemon);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('feed_show', ['slug' => $feed->getSlug()]);
+        }
+
+        return $this->render(
+            'feed/show.html.twig',
+            [
+                'form' => $form->createView(),
+                'feed' => $feed,
+                'pokemons' => $pokemons,
             ]
         );
     }

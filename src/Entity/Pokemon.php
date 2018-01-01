@@ -13,6 +13,8 @@ class Pokemon
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     *
+     * @var int
      */
     private $id;
 
@@ -31,11 +33,18 @@ class Pokemon
     private $lng;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Feed")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Feed", inversedBy="pokemons")
      *
      * @var Feed
      */
     private $feed;
+
+    /**
+     * @ORM\Column(type="datetime")
+     *
+     * @var \DateTime
+     */
+    private $despawnTime;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
@@ -58,10 +67,16 @@ class Pokemon
      */
     private $cp;
 
+    public function __construct()
+    {
+        $this->despawnTime = new \DateTime('now');
+        $this->despawnTime->modify('+1 hours');
+    }
+
     /**
-     * @return mixed
+     * @return int
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -116,6 +131,25 @@ class Pokemon
     public function setFeed(Feed $feed): void
     {
         $this->feed = $feed;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getDespawnTime(): \DateTime
+    {
+        return $this->despawnTime;
+    }
+
+    /**
+     * @param \DateTime $despawnTime
+     * @return Pokemon
+     */
+    public function setDespawnTime(\DateTime $despawnTime): Pokemon
+    {
+        $this->despawnTime = $despawnTime;
+
+        return $this;
     }
 
     /**

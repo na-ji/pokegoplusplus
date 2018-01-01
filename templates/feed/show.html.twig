@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title feed.name %}
+
+{% block body %}
+    <h2>{{ feed.name }}</h2>
+    <h3>Add a pokemon</h3>
+    {{ form(form) }}
+    <h3>Pokemons</h3>
+    {% if pokemons|length > 0 %}
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Coordinates</th>
+                <th>IV</th>
+                <th>CP</th>
+                <th>Despawn</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for pokemon in pokemons %}
+                <tr>
+                    <td></td>
+                    <td>{{ pokemon.lat }}, {{ pokemon.lng }}</td>
+                    <td>{{ pokemon.iv }}</td>
+                    <td>{{ pokemon.cp }}</td>
+                    <td>{{ pokemon.despawnTime|date }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        No pokemons yet
+    {% endif %}
+{% endblock body %}

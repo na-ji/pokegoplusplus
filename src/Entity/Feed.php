@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -33,11 +34,19 @@ class Feed
     private $slug;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Pokemon", mappedBy="feed")
+     *
+     * @var ArrayCollection
+     */
+    private $pokemons;
+
+    /**
      * Feed constructor.
      */
     public function __construct()
     {
         $this->slug = substr(str_shuffle(MD5(microtime())), 0, 5);
+        $this->pokemons = new ArrayCollection();
     }
 
     /**
@@ -81,6 +90,51 @@ class Feed
     public function setSlug(string $slug): Feed
     {
         $this->slug = $slug;
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getPokemons(): ArrayCollection
+    {
+        return $this->pokemons;
+    }
+
+    /**
+     * @param ArrayCollection $pokemons
+     * @return Feed
+     */
+    public function setPokemons(ArrayCollection $pokemons): Feed
+    {
+        $this->pokemons = $pokemons;
+
+        return $this;
+    }
+
+    /**
+     * @param Pokemon $pokemon
+     * @return Feed
+     */
+    public function addPokemon(Pokemon $pokemon): Feed
+    {
+        if (!$this->pokemons->contains($pokemon)) {
+            $this->pokemons->add($pokemon);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Pokemon $pokemon
+     * @return Feed
+     */
+    public function removePokemon(Pokemon $pokemon): Feed
+    {
+        if ($this->pokemons->contains($pokemon)) {
+            $this->pokemons->removeElement($pokemon);
+        }
+
         return $this;
     }
 }

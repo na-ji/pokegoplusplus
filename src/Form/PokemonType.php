@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Pokemon;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -21,6 +22,8 @@ class PokemonType extends AbstractType
             ->add('pokedexNumber')
             ->add('iv')
             ->add('cp')
+            ->add('despawnTime')
+            ->add('add', SubmitType::class)
         ;
     }
 
