@@ -113,6 +113,10 @@ class Feed
             return $pokemon->getDespawnTime() > $now;
         });
 
+        usort($pokemons, function (Pokemon $a, Pokemon $b) {
+           return $a->getDespawnTime() > $b->getDespawnTime();
+        });
+
         return $pokemons;
     }
 

@@ -231,4 +231,22 @@ class Pokemon
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getStats(): string
+    {
+        $stats = '';
+
+        if ($this->getIv()) {
+            $stats .= ' '.$this->getIv().'iv';
+        }
+
+        if ($this->getCp()) {
+            $stats .= ' CP'.$this->getCp();
+        }
+
+        return $stats;
+    }
 }
