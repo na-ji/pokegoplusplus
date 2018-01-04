@@ -74,6 +74,13 @@ class Pokemon
      */
     private $level;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default"=0})
+     *
+     * @var bool
+     */
+    private $hidden;
+
     public function __construct()
     {
         $this->despawnTime = new \DateTime('now');
@@ -230,6 +237,33 @@ class Pokemon
         $this->level = $level;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     * @return Pokemon
+     */
+    public function setHidden(bool $hidden): Pokemon
+    {
+        $this->hidden = $hidden;
+
+        return $this;
+    }
+
+    /**
+     * @return Pokemon
+     */
+    public function hide(): Pokemon
+    {
+        return $this->setHidden(true);
     }
 
     /**

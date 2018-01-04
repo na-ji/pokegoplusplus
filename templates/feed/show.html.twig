@@ -16,6 +16,7 @@
                 <th>IV</th>
                 <th>CP</th>
                 <th>Despawn</th>
+                <th>Actions</th>
             </tr>
             </thead>
             <tbody>
@@ -26,6 +27,13 @@
                     <td>{{ pokemon.iv }}</td>
                     <td>{{ pokemon.cp }}</td>
                     <td>{{ pokemon.despawnTime|date }}</td>
+                    <td>
+                        {% if pokemon.isHidden() %}
+                            Hidden
+                        {% else %}
+                            <a href="{{ path('pokemon_hide', {id: pokemon.id}) }}" class="btn btn-primary hide-pokemon">Hide</a>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
@@ -37,7 +45,7 @@
 
 {% block javascripts %}
     <script>
-        $(function () {
+        function initMagicBox() {
             let magicBoxElement = $('#pokemon_magicBox');
             let latElement = $('#pokemon_lat');
             let lngElement = $('#pokemon_lng');
@@ -73,7 +81,7 @@
                     CP = match[4];
                     lat = match[6];
                     lng = match[7];
-                }  else if ((match = rocketMapRegex.exec(text)) !== null && match.length === 6) {
+                } else if ((match = rocketMapRegex.exec(text)) !== null && match.length === 6) {
                     pokemon = match[1];
                     lat = match[4];
                     lng = match[5];
@@ -111,6 +119,21 @@
                     levelElement.val(level);
                 }
             });
+        }
+
+        $(function () {
+            initMagicBox();
+
+            $('a.hide-pokemon').on('click', function (event) {
+                event.preventDefault();
+                let self = $(this);
+
+                fetch(self.attr('href'))
+                    .then(function () {
+                        self.off('click');
+                        self.replaceWith($('<span>Hidden</span>'));
+                    });
+            })
         });
     </script>
 {% endblock javascripts %}
