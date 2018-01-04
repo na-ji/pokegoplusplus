@@ -100,10 +100,24 @@ class FeedController extends Controller
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function live(Feed $feed, \Twig_Environment $twig, PokemonRepository $pokemonRepository)
+    public function live(Feed $feed, \Twig_Environment $twig, PokemonRepository $pokemonRepository, Request $request)
     {
+        $location = $request->get('loc', false);
+        $lat = false;
+        $lng = false;
+
+        if ($location) {
+            $coordinates = explode(',', $location);
+            if (count($coordinates) === 2) {
+                $lat = floatval($coordinates[0]) ? : false;
+                $lng = floatval($coordinates[1]) ? : false;
+            }
+        }
+
         $content = $twig->render('feed/live.txt.twig', [
             'pokemons' => $pokemonRepository->findLivePokemon($feed),
+            'lat' => $lat,
+            'lng' => $lng,
         ]);
 
         $response = new Response($content);

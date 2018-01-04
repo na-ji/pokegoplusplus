@@ -19,7 +19,7 @@
                         <td>{{ feed.name }}</td>
                         <td>
                             <div class="input-group">
-                                <input type="text" class="form-control" value="{{ url('feed_live', {slug: feed.slug}) }}" />
+                                <input type="text" class="form-control" value="{{ url('feed_live', {slug: feed.slug}) }}?loc=%loc%" />
                                 <div class="input-group-append">
                                     <a href="#!" class="btn btn-primary copy-link">Copy link</a>
                                 </div>

@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Service\Math;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -282,5 +283,23 @@ class Pokemon
         }
 
         return $stats;
+    }
+
+    /**
+     * @param double|bool $lat
+     * @param double|bool $lng
+     * @return string
+     */
+    public function calculateDistance($lat, $lng): string
+    {
+        $distance = '';
+
+        if (!$lat || !$lng) {
+            return $distance;
+        }
+
+        $distance = 'Distance : '.Math::haversineGreatCircleDistance($this->lat, $this->lng, $lat, $lng).'km';
+
+        return $distance;
     }
 }
