@@ -3,6 +3,7 @@
 {% block title feed.name %}
 
 {% block body %}
+    <a href="{{ path('feed_index') }}">&larr; Return</a>
     <h2>{{ feed.name }}</h2>
     <h3>Add a pokemon</h3>
     {{ form(form) }}
