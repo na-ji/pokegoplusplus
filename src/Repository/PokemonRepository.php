@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Feed;
 use App\Entity\Pokemon;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Types\Type;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 class PokemonRepository extends ServiceEntityRepository
@@ -13,16 +15,23 @@ class PokemonRepository extends ServiceEntityRepository
         parent::__construct($registry, Pokemon::class);
     }
 
-    /*
-    public function findBySomething($value)
+    public function findLivePokemon(Feed $feed): array
     {
-        return $this->createQueryBuilder('p')
-            ->where('p.something = :value')->setParameter('value', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
+        $now = new \DateTime('now');
+        $queryBuilder = $this->createQueryBuilder('pokemon');
+
+        $queryBuilder
+            ->where(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('pokemon.feed', $feed->getId()),
+                    $queryBuilder->expr()->eq('pokemon.hidden', 0),
+                    $queryBuilder->expr()->gte('pokemon.despawnTime', ':now')
+                )
+            )
+            ->orderBy('pokemon.despawnTime', 'DESC')
+            ->setParameter('now', $now, Type::DATETIME)
         ;
+
+        return $queryBuilder->getQuery()->getResult();
     }
-    */
 }

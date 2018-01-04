@@ -79,7 +79,7 @@ class Pokemon
      *
      * @var bool
      */
-    private $hidden;
+    private $hidden = false;
 
     public function __construct()
     {

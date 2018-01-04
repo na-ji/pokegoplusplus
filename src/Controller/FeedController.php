@@ -94,15 +94,16 @@ class FeedController extends Controller
      *
      * @param Feed $feed
      * @param \Twig_Environment $twig
+     * @param PokemonRepository $pokemonRepository
      * @return Response
      * @throws \Twig_Error_Loader
      * @throws \Twig_Error_Runtime
      * @throws \Twig_Error_Syntax
      */
-    public function live(Feed $feed, \Twig_Environment $twig)
+    public function live(Feed $feed, \Twig_Environment $twig, PokemonRepository $pokemonRepository)
     {
         $content = $twig->render('feed/live.txt.twig', [
-            'feed' => $feed
+            'pokemons' => $pokemonRepository->findLivePokemon($feed),
         ]);
 
         $response = new Response($content);

@@ -20,6 +20,7 @@ class PokemonType extends AbstractType
         $builder
             ->add('magicBox', TextareaType::class, [
                 'mapped' => false,
+                'required' => false,
             ])
             ->add('lat')
             ->add('lng')
