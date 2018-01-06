@@ -142,10 +142,13 @@ class Pokemon
 
     /**
      * @param Feed $feed
+     * @return Pokemon
      */
-    public function setFeed(Feed $feed): void
+    public function setFeed(Feed $feed): Pokemon
     {
         $this->feed = $feed;
+
+        return $this;
     }
 
     /**
@@ -194,10 +197,10 @@ class Pokemon
     }
 
     /**
-     * @param string $iv
+     * @param string|null $iv
      * @return Pokemon
      */
-    public function setIv(string $iv): Pokemon
+    public function setIv(?string $iv): Pokemon
     {
         $this->iv = $iv;
         return $this;
@@ -212,10 +215,10 @@ class Pokemon
     }
 
     /**
-     * @param int $cp
+     * @param int|null $cp
      * @return Pokemon
      */
-    public function setCp(int $cp): Pokemon
+    public function setCp(?int $cp): Pokemon
     {
         $this->cp = $cp;
         return $this;

@@ -34,4 +34,46 @@ class PokemonRepository extends ServiceEntityRepository
 
         return $queryBuilder->getQuery()->getResult();
     }
+
+    /**
+     * @param $lat
+     * @param $lng
+     * @param int $pokemonId
+     * @param \DateTime $despawnTime
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function pokemonExists($lat, $lng, int $pokemonId, \DateTime $despawnTime)
+    {
+        $queryBuilder = $this->createQueryBuilder('pokemon');
+        $queryBuilder
+            ->where(
+                $queryBuilder->expr()->andX(
+                    $queryBuilder->expr()->eq('pokemon.pokedexNumber', $pokemonId),
+                    $queryBuilder->expr()->eq('pokemon.lat', round($lat, 6)),
+                    $queryBuilder->expr()->eq('pokemon.lng', round($lng, 6)),
+                    $queryBuilder->expr()->eq('pokemon.despawnTime', ':despawnTime')
+                )
+            )
+            ->setParameter('despawnTime', $despawnTime, Type::DATETIME)
+            ->setMaxResults(1)
+        ;
+
+        $pokemon = $queryBuilder->getQuery()->getOneOrNullResult();
+
+        return $pokemon instanceof Pokemon;
+    }
+
+    /**
+     * @param $lat
+     * @param $lng
+     * @param int $pokemonId
+     * @param \DateTime $despawnTime
+     * @return bool
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function pokemonDoesNotExist($lat, $lng, int $pokemonId, \DateTime $despawnTime)
+    {
+        return ! $this->pokemonExists($lat, $lng, $pokemonId, $despawnTime);
+    }
 }
