@@ -285,6 +285,10 @@ class Pokemon
             $stats .= ' CP'.$this->getCp();
         }
 
+        if ($this->getLevel()) {
+            $stats .= ' LVL'.$this->getLevel();
+        }
+
         return $stats;
     }
 
