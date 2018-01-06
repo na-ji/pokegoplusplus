@@ -28,7 +28,7 @@ class PokemonRepository extends ServiceEntityRepository
                     $queryBuilder->expr()->gte('pokemon.despawnTime', ':now')
                 )
             )
-            ->orderBy('pokemon.despawnTime', 'DESC')
+            ->orderBy('pokemon.despawnTime', 'ASC')
             ->setParameter('now', $now, Type::DATETIME)
         ;
 
