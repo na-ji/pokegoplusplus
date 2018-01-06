@@ -292,14 +292,16 @@ class Pokemon
      */
     public function calculateDistance($lat, $lng): string
     {
-        $distance = '';
+        $text = '';
 
         if (!$lat || !$lng) {
-            return $distance;
+            return $text;
         }
 
-        $distance = 'Distance : '.Math::haversineGreatCircleDistance($this->lat, $this->lng, $lat, $lng).'km';
+        $distance = Math::haversineGreatCircleDistance($this->lat, $this->lng, $lat, $lng);
+        $text = 'Distance: '.$distance.'km';
+        $text .= ' | Cooldown: '.Math::distanceToCooldown($distance);
 
-        return $distance;
+        return $text;
     }
 }
