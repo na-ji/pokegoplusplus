@@ -82,10 +82,49 @@ class Pokemon
      */
     private $hidden = false;
 
-    public function __construct()
+    public function __construct(array $json = null)
     {
         $this->despawnTime = new \DateTime('now');
         $this->despawnTime->modify('+1 hours');
+
+        if (!is_array($json)) {
+            return;
+        }
+
+        if (array_key_exists('lat', $json)) {
+            $this->setLat($json['lat']);
+        }
+
+        if (array_key_exists('lng', $json)) {
+            $this->setLng($json['lng']);
+        }
+
+        if (array_key_exists('pokedexEntry', $json) && array_key_exists('Number', $json['pokedexEntry'])) {
+            $this->setPokedexNumber($json['pokedexEntry']['Number']);
+        }
+
+        if (array_key_exists('iv', $json)) {
+            $this->setIv($json['iv']);
+        }
+
+        if (array_key_exists('pc', $json)) {
+            $this->setCp($json['pc']);
+        }
+
+        if (array_key_exists('lvl', $json)) {
+            $this->setLevel($json['lvl']);
+        }
+
+        if (array_key_exists('despawn', $json) && $json['despawn']) {
+            $despawnTime = \DateTime::createFromFormat('H:i', $json['despawn']);
+            $now = new \DateTime('now');
+
+            if ($despawnTime < $now) {
+                $despawnTime->modify('+1 days');
+            }
+
+            $this->setDespawnTime($despawnTime);
+        }
     }
 
     /**

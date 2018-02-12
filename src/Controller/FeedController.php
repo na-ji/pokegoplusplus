@@ -10,6 +10,7 @@ use App\Repository\FeedRepository;
 use App\Repository\PokemonRepository;
 use App\Service\Pokedex;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -124,5 +125,50 @@ class FeedController extends Controller
         $response->headers->set('Content-Type', 'text/plain');
 
         return $response;
+    }
+
+    /**
+     * @Route("/feed/{slug}/webhook", name="feed_incoming_webhook")
+     * @Method({"POST"})
+     *
+     * @param Feed $feed
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    public function webhook(Feed $feed, Request $request, EntityManagerInterface $entityManager)
+    {
+        $webhook = $request->getContent();
+
+        if (!$webhook) {
+            return new Response('FAIL', 400);
+        }
+
+        $json = json_decode($webhook, $assoc = true);
+
+        if (
+            !is_array($json) ||
+            !array_key_exists('lat', $json) ||
+            !array_key_exists('lng', $json) ||
+            !$json['lat'] ||
+            !$json['lng'] ||
+            !array_key_exists('pokedexEntry', $json) ||
+            !is_array($json['pokedexEntry']) ||
+            !array_key_exists('Number', $json['pokedexEntry'])
+        ) {
+            return new Response('Bad hook', 400);
+        }
+
+        dump($json);
+
+        $pokemon = new Pokemon($json);
+        $pokemon
+            ->setFeed($feed)
+        ;
+
+        $entityManager->persist($pokemon);
+        $entityManager->flush();
+
+        return new Response('OK');
     }
 }
