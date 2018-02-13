@@ -1,3 +1,3 @@
 {% for pokemon in pokemons %}
-{{ pokemon.lat }},{{ pokemon.lng }},{{ pokemon.pokedexNumber }},{{ pokemon.pokedexNumber|pokedexName }}{{ pokemon.getStats() }},Despawn: {{ pokemon.despawnTime|date('H:i:s') }} | {{ pokemon.calculateDistance(lat, lng) }}
+{{ pokemon.lat }},{{ pokemon.lng }},{{ pokemon.pokedexNumber }},{{ pokemon.pokedexNumber|pokedexName }}{{ pokemon.getStats() }},DS: {{ pokemon.despawnTime|date('H:i:s') }} | {{ pokemon.calculateDistance(lat, lng) }}
 {% endfor %}

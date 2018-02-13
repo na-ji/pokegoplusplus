@@ -345,8 +345,8 @@ class Pokemon
         }
 
         $distance = Math::haversineGreatCircleDistance($this->lat, $this->lng, $lat, $lng);
-        $text = 'Distance: '.$distance.'km';
-        $text .= ' | Cooldown: '.Math::distanceToCooldown($distance);
+        $text = 'D: '.$distance.'km';
+        $text .= ' | CD: '.Math::distanceToCooldown($distance);
 
         return $text;
     }
