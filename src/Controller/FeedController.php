@@ -117,6 +117,7 @@ class FeedController extends Controller
 
         $content = $twig->render('feed/live.txt.twig', [
             'pokemons' => $pokemonRepository->findLivePokemon($feed),
+            'feed' => $feed,
             'lat' => $lat,
             'lng' => $lng,
         ]);

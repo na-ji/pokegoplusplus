@@ -1,4 +1,4 @@
-0,0,0,{{ pokemons|length }} results,
+0,0,0,{{ pokemons|length }} results,{{ feed.name }}
 {% for pokemon in pokemons %}
 {{ pokemon.lat }},{{ pokemon.lng }},{{ pokemon.pokedexNumber }},{{ pokemon.pokedexNumber|pokedexName }}{{ pokemon.getStats() }},DS: {{ pokemon.despawnTime|date('H:i:s') }} | {{ pokemon.calculateDistance(lat, lng) }}
 {% endfor %}
